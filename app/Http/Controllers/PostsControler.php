@@ -82,7 +82,7 @@ class PostsControler extends Controller
         }
 
 
-        return view('posts.edit')->with('post', $post);;
+        return view('posts.edit')->with('post', $post);
     }
 
     /**
@@ -98,7 +98,6 @@ class PostsControler extends Controller
         $post->content = $request->input('content');
         $post->save();
         return view('posts.show')->with('post', $post);
-
     }
 
     /**
@@ -116,6 +115,6 @@ class PostsControler extends Controller
 
         $post->delete();
 
-        return view('home');
+        return redirect('/posts')->with('status', 'Post deleted!');
     }
 }
