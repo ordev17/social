@@ -82,7 +82,7 @@
         <h4 class="modal-title">Add</h4>
       </div>
       <div class="modal-body">
-        <p>Some text in the modal.</p>
+        <img class="img-responsive" src="{{ asset('img/cars/2.jpg') }}">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -91,24 +91,6 @@
 
   </div>
 </div>
-<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-<script>
-    
-
-    
-    
- 
-    $('#myModal').modal('toggle');
-        
-    
-
-
-    
-    
-
-    
-    
-</script>
 
 
 @endsection
