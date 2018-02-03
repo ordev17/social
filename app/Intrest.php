@@ -4,10 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Follower extends Model
+class Intrest extends Model
 {
-    
-        public function user(){
+    public function user(){
         return $this->belongsTo('App\User');
     }
 }
