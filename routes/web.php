@@ -21,6 +21,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/profile/{username}', 'ProfileControler@profile');
 
-Route::post('/follow/{user}','FollowersControler@follow');
+Route::post('/follow/{user}', 'FollowersControler@follow');
 
-Route::resource('posts','PostsControler');
+Route::resource('posts', 'PostsControler');
+
+Route::get('/ads', 'AdsController@get');
