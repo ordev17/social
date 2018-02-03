@@ -24,6 +24,3 @@ Route::get('/profile/{username}', 'ProfileControler@profile');
 Route::post('/follow/{user}','FollowersControler@follow');
 
 Route::resource('posts','PostsControler');
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
