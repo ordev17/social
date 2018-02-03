@@ -83,7 +83,7 @@
                     <h4 class="modal-title">Advertisement</h4>
                 </div>
                 <div class="modal-body">
-                    <img class="img-responsive" src="{{ asset('img/cars/2.jpg') }}">
+                    <img class="img-responsive" id="advertImg" src="img/undefined.jpg">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
