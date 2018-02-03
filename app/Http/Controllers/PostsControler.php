@@ -8,13 +8,13 @@ use Auth;
 
 class PostsControler extends Controller
 {
-    
-    
-    
+
+
     public function __construct()
     {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,8 +22,8 @@ class PostsControler extends Controller
      */
     public function index()
     {
-        $post=Post::orderBy('updated_at', 'DESC')->paginate(10);
-        return view('posts.index')->with('posts',$post);
+        $post = Post::orderBy('updated_at', 'DESC')->paginate(10);
+        return view('posts.index')->with('posts', $post);
     }
 
     /**
@@ -39,15 +39,15 @@ class PostsControler extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        
+
         $post = new Post;
-        $post->user_id=Auth::user()->id;
-        $post->content=$request->content;
+        $post->user_id = Auth::user()->id;
+        $post->content = $request->input('content');
         $post->save();
         return 'ok';
     }
@@ -55,71 +55,67 @@ class PostsControler extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        
-        $post=Post::findOrFail($id);
-        return view('posts.show')->with('post',$post);
+
+        $post = Post::findOrFail($id);
+        return view('posts.show')->with('post', $post);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-      
-        
-        
-        
-        $post=Post::findOrFail($id);
-        
-        if(auth()->user()->id != $post->user_id)
-        {
+
+
+        $post = Post::findOrFail($id);
+
+        if (auth()->user()->id != $post->user_id) {
             return redirect('/posts');
         }
-        
-        
-        return view('posts.edit')->with('post',$post);;
+
+
+        return view('posts.edit')->with('post', $post);;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $post=Post::find($id);
-        $post->content=$request->content;
+        $post = Post::find($id);
+        $post->content = $request->input('content');
         $post->save();
-        return view('posts.show')->with('post',$post);
-        
+        return view('posts.show')->with('post', $post);
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-         $post=Post::find($id);
-         if(auth()->user()->id != $post->user_id)
-        {
+        $post = Post::find($id);
+        if (auth()->user()->id != $post->user_id) {
             return redirect('/posts');
         }
-         
-         $post->delete();
-        
+
+        $post->delete();
+
         return view('home');
     }
 }
