@@ -49,7 +49,7 @@ class PostsControler extends Controller
         $post->user_id = Auth::user()->id;
         $post->content = $request->input('content');
         $post->save();
-        return 'ok';
+        return redirect('/posts')->with('status', 'Post created!');
     }
 
     /**

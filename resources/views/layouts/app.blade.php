@@ -29,26 +29,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @auth
-                    <div class="form-control">
-                        <a href="/posts" class="btn btn-primary pull-left ">
-
-                            All Posts
-                        </a>
-
-                        <a href="/posts/create" class="btn btn-primary pull-left">
-
-                            Create Post
-                        </a>
-                    </div>
-                @endauth
 
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    &nbsp;
+                    @auth
+                    <li><a href="/posts">All posts</a></li>
+                    <li><a href="/posts/create">Create Post</a></li>
+                    @endauth
                 </ul>
 
 
@@ -68,6 +58,13 @@
 
                             <ul class="dropdown-menu">
                                 <li>
+                                    <a href="/profile/{{Auth::user()->username}}">
+
+                                        My Profile
+                                    </a>
+                                </li>
+
+                                <li>
                                     <a href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                    document.getElementById('logout-form').submit();">
@@ -79,14 +76,6 @@
                                         {{ csrf_field() }}
                                     </form>
                                 </li>
-
-                                <li>
-                                    <a href="/profile/{{Auth::user()->username}}">
-
-                                        My Profile
-                                    </a>
-                                </li>
-
 
                             </ul>
                         </li>
