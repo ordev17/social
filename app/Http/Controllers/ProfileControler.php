@@ -24,7 +24,7 @@ class ProfileControler extends Controller
     }
     
     public function reactions(){
-        $message=Message::where('sender',Auth::user()->id)->where('seen',false)->get();
+        $message=Message::where('user_id',Auth::user()->id)->where('seen',false)->get();
         
         return view('user.reactions')->with('messages',$message);
     }
@@ -32,7 +32,7 @@ class ProfileControler extends Controller
     public function message(Request $request) {
         
         $message=new Message;
-        $message->sender=Auth::user()->id;
+        $message->user_id=Auth::user()->id;
         $message->reciver=$request->input('id');
         $message->content=$request->input('mess');
         $message->save();
