@@ -11,12 +11,15 @@
                 <h1>{{$user->name}}</h1>
                 <h3>{{$user->email}}</h3>
                 <h3>{{$user->dbt->age}} years old </h3>
+                @if(Auth::user()->id != $user->id)
                 <form method="post" action="/follow/{{$user->id}}" >
                     {{csrf_field()}}
-                <input type="submit" class="btn btn-success" value="Follow" >
+                <input type="submit" class="btn btn-success pull-left" value="Follow" >
+                
                 </form>
+                <a  class="btn btn-primary  pull-right" href="/message/{{$user->id}}"  >Message</a>
 
-
+               @endif
 
 
 
@@ -49,7 +52,5 @@
     @endforeach
 </div>
         </div>
-<div class="row">
-{{$user->followers}}
-</div>
+
 @endsection
