@@ -1144,7 +1144,7 @@ var ads = [];
 var adImage = 'img/undefined.jpg';
 var interest = [];
 
-if (location.pathname === "/posts") {
+if (location.pathname === "/posts" || location.pathname === "/inbox") {
 
     /********** check and set up video/webcam **********/
 
@@ -1258,9 +1258,9 @@ if (location.pathname === "/posts") {
 
         for (var i = 0; i < catInterest.length; i++) {
             if (catInterest[i].emotion === 'angry') {
-                summedInterest = summedInterest - catInterest[i].value;
+                summedInterest = summedInterest - catInterest[i].value / 2;
             } else if (catInterest[i].emotion === 'sad') {
-                summedInterest = summedInterest - catInterest[i].value;
+                summedInterest = summedInterest - catInterest[i].value / 2;
             } else if (catInterest[i].emotion === 'surprised') {
                 summedInterest = summedInterest + catInterest[i].value;
             } else if (catInterest[i].emotion === 'happy') {
@@ -1270,6 +1270,14 @@ if (location.pathname === "/posts") {
         if (summedInterest < 0) summedInterest = 0;
         axios.post('/ads/interest/' + catID + '/save', {
             interest: summedInterest
+        });
+        interest = [];
+    };
+
+    var saveReaction = function saveReaction(messageId) {
+        var msgInterest = JSON.stringify(calcInterest(interest));
+        axios.post('/profile/message/' + messageId + '/reaction', {
+            reaction: msgInterest
         });
         interest = [];
     };
@@ -1298,7 +1306,30 @@ if (location.pathname === "/posts") {
 
     /******** stats ********/
 
-    axios.get('/ads').then(function (response) {
+    setInterval(function () {
+        axios.get('/ads/display').then(function (response) {
+            var int = response.data;
+            var totalWeight = 0;
+            for (var i = 0; i < int.length; i++) {
+                totalWeight += int[i].interest;
+            }
+            var random = Math.floor(Math.random() * totalWeight);
+            var cat = int[Math.floor(Math.random() * int.length)];
+            for (var _i = 0; _i < int.length; _i++) {
+                random -= int[_i].interest;
+
+                if (random < 0) {
+                    cat = int[_i];
+                }
+            }
+
+            var ad = cat.ads[Math.floor(Math.random() * cat.ads.length)];
+            document.getElementById("ad").src = ad.url;
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }, 5000);
+    if (location.pathname === "/posts") axios.get('/ads').then(function (response) {
         ads = response.data;
         setInterval(function () {
             var ad = ads[Math.floor(Math.random() * ads.length)];
@@ -1306,7 +1337,7 @@ if (location.pathname === "/posts") {
             adImage = ad.url;
             document.getElementById("advertImg").src = adImage;
             $("#myModal").modal();
-        }, 5000);
+        }, 10000);
     }).catch(function (error) {
         console.log(error);
     });
@@ -1405,6 +1436,11 @@ if (location.pathname === "/posts") {
         }
     };
     startVideo();
+
+    $('#messageModal').on('shown.bs.modal', function (e) {
+        var messageId = $(e.relatedTarget).data('message-id');
+        setTimeout(saveReaction(messageId), 3000);
+    });
 }
 
 $("#mess-1").click(function () {

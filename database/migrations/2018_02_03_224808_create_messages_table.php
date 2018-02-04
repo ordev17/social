@@ -18,7 +18,7 @@ class CreateMessagesTable extends Migration
             $table->text('content');
             $table->integer('user_id');
             $table->integer('reciver');
-            $table->string('reaction')->nullable();
+            $table->string('reaction', 512)->nullable();
             $table->boolean('seen')->default(false);
             $table->timestamps();
         });
