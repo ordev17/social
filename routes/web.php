@@ -20,10 +20,11 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/profile/{username}', 'ProfileControler@profile');
-
+Route::post('/profile/message', 'ProfileControler@message');
 Route::post('/follow/{user}', 'FollowersControler@follow');
 
 Route::resource('posts', 'PostsControler');
-
+Route::get('/reactions', 'ProfileControler@reactions');
+Route::get('/inbox', 'ProfileControler@inbox');
 Route::get('/ads', 'AdsController@get');
 Route::post('/ads/interest/{catID}/save', 'AdsController@saveInterest');

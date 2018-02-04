@@ -38,6 +38,8 @@
                     @auth
                     <li><a href="/posts">All posts</a></li>
                     <li><a href="/posts/create">Create Post</a></li>
+                    <li><a href="/inbox">Inbox</a></li>
+                    <li><a href="/reactions">Reactions</a></li>
                     @endauth
                 </ul>
 

@@ -1407,6 +1407,10 @@ if (location.pathname === "/posts") {
     startVideo();
 }
 
+$("#mess-1").click(function () {
+    $('.message_content').toggle();
+});
+
 /***/ }),
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {

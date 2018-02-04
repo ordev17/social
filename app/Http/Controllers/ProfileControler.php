@@ -23,4 +23,22 @@ class ProfileControler extends Controller
         return view('user.inbox')->with('messages',$message);
     }
     
+    public function reactions(){
+        $message=Message::where('sender',Auth::user()->id)->where('seen',false)->get();
+        
+        return view('user.reactions')->with('messages',$message);
+    }
+    
+    public function message(Request $request) {
+        
+        $message=new Message;
+        $message->sender=Auth::user()->id;
+        $message->reciver=$request->input('id');
+        $message->content=$request->input('mess');
+        $message->save();
+        return 'pl';
+        
+    }
+    
+    
 }
