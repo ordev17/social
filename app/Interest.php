@@ -4,8 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Intrest extends Model
+class Interest extends Model
 {
+    protected $table = 'interests';
+    protected $guarded = [];
     public function user(){
         return $this->belongsTo('App\User');
     }

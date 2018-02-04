@@ -1142,6 +1142,7 @@ var emotionClassifier = function emotionClassifier() {
 
 var ads = [];
 var adImage = 'img/undefined.jpg';
+var interest = [];
 
 if (location.pathname === "/posts") {
 
@@ -1197,6 +1198,15 @@ if (location.pathname === "/posts") {
         drawLoop();
     };
 
+    var stopVideo = function stopVideo() {
+        vid.pause();
+        ctrack.stop();
+        ctrack.reset();
+        trackingStarted = false;
+        // start loop to draw face
+        //drawLoop();
+    };
+
     var drawLoop = function drawLoop() {
         requestAnimFrame(drawLoop);
         overlayCC.clearRect(0, 0, vid_width, vid_height);
@@ -1220,6 +1230,7 @@ if (location.pathname === "/posts") {
     };
 
     var updateData = function updateData(data) {
+        interest.push(data);
         // update
         var rects = svg.selectAll("rect").data(data).attr("y", function (datum) {
             return height - y(datum.value);
@@ -1241,13 +1252,57 @@ if (location.pathname === "/posts") {
         texts.exit().remove();
     };
 
+    var saveInterest = function saveInterest(catID) {
+        var catInterest = calcInterest(interest);
+        var summedInterest = 0;
+
+        for (var i = 0; i < catInterest.length; i++) {
+            if (catInterest[i].emotion === 'angry') {
+                summedInterest = summedInterest - catInterest[i].value;
+            } else if (catInterest[i].emotion === 'sad') {
+                summedInterest = summedInterest - catInterest[i].value;
+            } else if (catInterest[i].emotion === 'surprised') {
+                summedInterest = summedInterest + catInterest[i].value;
+            } else if (catInterest[i].emotion === 'happy') {
+                summedInterest = summedInterest + catInterest[i].value;
+            }
+        }
+        if (summedInterest < 0) summedInterest = 0;
+        axios.post('/ads/interest/' + catID + '/save', {
+            interest: summedInterest
+        });
+        interest = [];
+    };
+
+    var calcInterest = function calcInterest() {
+        var calc = interest[0];
+
+        if (calc === undefined) calc = [];else {
+            for (var k = 0; k < calc.length; k++) {
+                calc[k].value = 0;
+            }
+
+            for (var i = 0; i < interest.length; i++) {
+                for (var o = 0; o < calc.length; o++) {
+                    calc[o].value += interest[i][o].value;
+                }
+            }
+
+            for (var j = 0; j < calc.length; j++) {
+                calc[j].value = calc[j].value / interest.length;
+            }
+        }
+
+        return calc;
+    };
+
     /******** stats ********/
 
     axios.get('/ads').then(function (response) {
         ads = response.data;
         setInterval(function () {
             var ad = ads[Math.floor(Math.random() * ads.length)];
-            //console.log(ad);
+            setTimeout(saveInterest(ad.category_id), 3000);
             adImage = ad.url;
             document.getElementById("advertImg").src = adImage;
             $("#myModal").modal();
@@ -1349,7 +1404,6 @@ if (location.pathname === "/posts") {
             x.style.display = "none";
         }
     };
-
     startVideo();
 }
 

@@ -26,3 +26,4 @@ Route::post('/follow/{user}', 'FollowersControler@follow');
 Route::resource('posts', 'PostsControler');
 
 Route::get('/ads', 'AdsController@get');
+Route::post('/ads/interest/{catID}/save', 'AdsController@saveInterest');

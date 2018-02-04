@@ -135,6 +135,7 @@ var emotionClassifier = function() {
 
 let ads = [];
 let adImage = 'img/undefined.jpg';
+let interest = [];
 
 if (location.pathname === "/posts") {
     axios.get('/ads')
@@ -142,7 +143,7 @@ if (location.pathname === "/posts") {
             ads = response.data;
             setInterval(function () {
                 let ad = ads[Math.floor(Math.random() * ads.length)];
-                //console.log(ad);
+                setTimeout(saveInterest(ad.category_id), 3000);
                 adImage = ad.url;
                 document.getElementById("advertImg").src = adImage;
                 $("#myModal").modal();
@@ -235,6 +236,15 @@ if (location.pathname === "/posts") {
         drawLoop();
     }
 
+    function stopVideo() {
+        vid.pause();
+        ctrack.stop();
+        ctrack.reset();
+        trackingStarted = false;
+        // start loop to draw face
+        //drawLoop();
+    }
+
     function drawLoop() {
         requestAnimFrame(drawLoop);
         overlayCC.clearRect(0, 0, vid_width, vid_height);
@@ -319,6 +329,7 @@ if (location.pathname === "/posts") {
     attr("class", "yAxis");
 
     function updateData(data) {
+        interest.push(data);
         // update
         var rects = svg.selectAll("rect")
             .data(data)
@@ -336,6 +347,52 @@ if (location.pathname === "/posts") {
         // exit
         rects.exit().remove();
         texts.exit().remove();
+    }
+
+    function saveInterest(catID){
+        let catInterest = calcInterest(interest);
+        let summedInterest = 0;
+
+        for (let i = 0; i < catInterest.length; i++) {
+           if (catInterest[i].emotion === 'angry'){
+               summedInterest = summedInterest - catInterest[i].value;
+           }else if(catInterest[i].emotion === 'sad'){
+               summedInterest = summedInterest - catInterest[i].value;
+           }else if(catInterest[i].emotion === 'surprised'){
+               summedInterest = summedInterest + catInterest[i].value;
+           }else if(catInterest[i].emotion === 'happy'){
+               summedInterest = summedInterest + catInterest[i].value;
+           }
+        }
+        if (summedInterest < 0 ) summedInterest = 0;
+        axios.post('/ads/interest/' + catID + '/save', {
+            interest: summedInterest
+        });
+        interest = [];
+    }
+
+    function calcInterest(){
+        let calc = interest[0];
+
+        if (calc === undefined)
+            calc = [];
+        else {
+            for (let k = 0; k < calc.length; k++) {
+                calc[k].value = 0;
+            }
+
+            for (let i=0; i < interest.length; i++){
+                for (let o = 0; o < calc.length; o++) {
+                    calc[o].value += interest[i][o].value;
+                }
+            }
+
+            for (let j = 0; j < calc.length; j++) {
+                calc[j].value = calc[j].value / interest.length;
+            }
+        }
+
+        return calc;
     }
 
     /******** stats ********/
@@ -358,6 +415,5 @@ if (location.pathname === "/posts") {
             x.style.display = "none";
         }
     }
-
     startVideo();
 }
