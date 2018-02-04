@@ -36,7 +36,7 @@ class ProfileControler extends Controller
         $message->reciver=$request->input('id');
         $message->content=$request->input('mess');
         $message->save();
-        return 'pl';
+        return 'ok';
         
     }
     
