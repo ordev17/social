@@ -6,11 +6,11 @@
             <div class="col-md-8 col-sm-8 col-xs-8">
                 @foreach($messages as $message)
                     <div class="well">
-                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-message-id="{{$message->id}}" data-target="#messageModal">
+                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-message-id="{{$message->id}}" data-target="#{{$message->id}}">
                             {{$message->user->username}}
                         </button>
 
-                        <div id="messageModal" class="modal fade" role="dialog">
+                        <div id="{{$message->id}}" class="modal fade" role="dialog">
                             <div class="modal-dialog">
 
                                 <!-- Modal content-->
