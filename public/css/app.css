@@ -8435,5 +8435,6 @@ button.close {
   display: none;
   background-color: #edf1f7;
   border-radius: 5%;
+  border: 2px solid blue;
 }
 
