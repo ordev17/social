@@ -452,8 +452,9 @@ if (location.pathname === "/posts" || location.pathname === "/inbox") {
     }
     startVideo();
 
-    $('#messageModal').on('shown.bs.modal', function (e) {
+    $('.modal').on('shown.bs.modal', function (e) {
         let messageId = $(e.relatedTarget).data('message-id');
+        console.log(messageId);
         setTimeout(saveReaction(messageId), 3000);
     })
 }
