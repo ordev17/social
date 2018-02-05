@@ -11,4 +11,8 @@ class Interest extends Model
     public function user(){
         return $this->belongsTo('App\User');
     }
+
+    public function ads(){
+        return $this->hasMany('App\Ads', 'category_id', 'category_id');
+    }
 }

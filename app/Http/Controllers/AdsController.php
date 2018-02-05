@@ -35,4 +35,10 @@ class AdsController extends Controller
             $interest->save();
         }
     }
+
+    public function displayAd()
+    {
+        $id = Auth::id();
+        return Interest::select('interest', 'id', 'user_id', 'category_id')->where('user_id', $id)->with('ads')->orderBy('interest', 'desc')->take(3)->get();
+    }
 }

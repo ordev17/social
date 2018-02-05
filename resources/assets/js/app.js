@@ -137,7 +137,34 @@ let ads = [];
 let adImage = 'img/undefined.jpg';
 let interest = [];
 
-if (location.pathname === "/posts") {
+if (location.pathname === "/posts" || location.pathname === "/inbox") {
+    setInterval(function () {
+    axios.get('/ads/display')
+        .then(function (response) {
+                let int = response.data;
+                let totalWeight = 0;
+                for (let i = 0; i < int.length; i++) {
+                    totalWeight += int[i].interest;
+                }
+                let random = Math.floor(Math.random() * totalWeight);
+                let cat = int[Math.floor(Math.random() * int.length)];
+                for (let i = 0; i < int.length; i++) {
+                    random -= int[i].interest;
+
+                    if (random < 0) {
+                        cat = int[i];
+                    }
+                }
+
+                let ad = cat.ads[Math.floor(Math.random() * cat.ads.length)];
+                document.getElementById("ad").src = ad.url;
+
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }, 5000);
+    if(location.pathname === "/posts")
     axios.get('/ads')
         .then(function (response) {
             ads = response.data;
@@ -147,7 +174,7 @@ if (location.pathname === "/posts") {
                 adImage = ad.url;
                 document.getElementById("advertImg").src = adImage;
                 $("#myModal").modal();
-            }, 5000);
+            }, 10000);
         })
         .catch(function (error) {
             console.log(error);
@@ -355,9 +382,9 @@ if (location.pathname === "/posts") {
 
         for (let i = 0; i < catInterest.length; i++) {
            if (catInterest[i].emotion === 'angry'){
-               summedInterest = summedInterest - catInterest[i].value;
+               summedInterest = summedInterest - catInterest[i].value / 2;
            }else if(catInterest[i].emotion === 'sad'){
-               summedInterest = summedInterest - catInterest[i].value;
+               summedInterest = summedInterest - catInterest[i].value / 2;
            }else if(catInterest[i].emotion === 'surprised'){
                summedInterest = summedInterest + catInterest[i].value;
            }else if(catInterest[i].emotion === 'happy'){
@@ -367,6 +394,14 @@ if (location.pathname === "/posts") {
         if (summedInterest < 0 ) summedInterest = 0;
         axios.post('/ads/interest/' + catID + '/save', {
             interest: summedInterest
+        });
+        interest = [];
+    }
+
+    function saveReaction(messageId){
+        let msgInterest = JSON.stringify(calcInterest(interest));
+        axios.post('/profile/message/' + messageId + '/reaction', {
+            reaction: msgInterest
         });
         interest = [];
     }
@@ -416,6 +451,11 @@ if (location.pathname === "/posts") {
         }
     }
     startVideo();
+
+    $('#messageModal').on('shown.bs.modal', function (e) {
+        let messageId = $(e.relatedTarget).data('message-id');
+        setTimeout(saveReaction(messageId), 3000);
+    })
 }
 
 $("#mess-1").click(function(){
