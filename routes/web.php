@@ -23,7 +23,7 @@ Route::get('/profile/{username}', 'ProfileControler@profile');
 Route::post('/profile/message', 'ProfileControler@message');
 Route::post('/profile/message/{message}/reaction', 'ProfileControler@messageReaction');
 Route::post('/follow/{user}', 'FollowersControler@follow');
-
+Route::post('/search', 'ProfileControler@search');
 Route::resource('posts', 'PostsControler');
 Route::get('/reactions', 'ProfileControler@reactions');
 Route::get('/inbox', 'ProfileControler@inbox');

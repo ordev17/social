@@ -21,7 +21,10 @@ class ProfileControler extends Controller
 
     public function inbox()
     {
-        $message = Message::where('reciver', Auth::user()->id)->where('seen', false)->get();
+        $message = Message::where('reciver', Auth::user()->id)
+                ->where('seen', false)
+                ->orderBy('created_at', 'DESC')
+                ->get();
 
         return view('user.inbox')->with('messages', $message);
     }
@@ -30,6 +33,7 @@ class ProfileControler extends Controller
     {
         $message = Message::where('user_id', Auth::user()->id)
                 ->whereNotNull('reaction')
+                ->orderBy('created_at', 'DESC')
                 ->get();
 
         return view('user.reactions')->with('messages', $message);
@@ -54,6 +58,14 @@ class ProfileControler extends Controller
             $message->save();
         }
         return 'ok';
+    }
+    
+    
+    public function search(Request $request){
+        
+        $users=User::where('username', 'like', '%' . $request->input('search') . '%')->get();
+        return view('user.results')->with('users', $users);
+        
     }
 
 }

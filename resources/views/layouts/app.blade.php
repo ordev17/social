@@ -40,6 +40,15 @@
                     <li><a href="/posts/create">Create Post</a></li>
                     <li><a href="/inbox">Inbox</a></li>
                     <li><a href="/reactions">Reactions</a></li>
+                    <li><a><form method="post" action="/search" >
+                                <div class="form-group"> 
+                                    {{ csrf_field() }}
+                                    <input type="text" name="search" > 
+                                    <input type="submit" value="Search Users" >
+                                </div>
+                            </form>
+                        </a>
+                    </li>
                     @endauth
                 </ul>
 

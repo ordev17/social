@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+
+
 use Illuminate\Support\Facades\Auth;
 
 class PostsControler extends Controller
@@ -22,6 +24,7 @@ class PostsControler extends Controller
      */
     public function index()
     {
+        
         $post = Post::orderBy('updated_at', 'DESC')->paginate(10);
         return view('posts.index')->with('posts', $post);
     }

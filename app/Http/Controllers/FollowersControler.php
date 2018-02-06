@@ -15,7 +15,9 @@ class FollowersControler extends Controller
         $follower->user_id=Auth::user()->id;
         $follower->user=$id;
         $follower->save();
-        return "ok";
+        return redirect('/posts')->with('status', 'You are following the user');
         
     }
+   
+    
 }
